@@ -23,14 +23,14 @@ public class CustomersUpdate
     }
 
     [Function(nameof(CustomersUpdate))]
-    [OpenApiOperation(operationId: "CustomersGetByIdUpdateDelete", tags: new[] { "Customer" }, Summary = "Update, Delete, or Get a Customer by Id.", Description = "Operation get or modify a customer in database.", Visibility = OpenApiVisibilityType.Important)]
-    [OpenApiRequestBody(contentType: "application/json", bodyType: typeof(Customer), Required = true, Description = "modify/get customer in database.")]
-    [OpenApiParameter("id", Description = "Id for the customer to be fetched.", Type = typeof(Guid), Required = true, Visibility = OpenApiVisibilityType.Important)]
-    [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(string), Summary = "Job list.", Description = "List of all the jobs.")]
+    [OpenApiOperation(operationId: "CustomersGetByIdUpdateDelete", tags: new[] { "Customer" }, Summary = "Update an existing Customer.", Description = "Operation Update an existing Customer in database.", Visibility = OpenApiVisibilityType.Important)]
+    [OpenApiRequestBody(contentType: "application/json", bodyType: typeof(Customer), Required = true, Description = "Update an existing Customer in database.")]
+    [OpenApiParameter("id", Description = "Id for the customer to be updated.", Type = typeof(Guid), Required = true, Visibility = OpenApiVisibilityType.Important)]
+    [OpenApiResponseWithBody(statusCode: HttpStatusCode.NoContent, contentType: "application/json", bodyType: typeof(string), Summary = "Customer Updated.", Description = "Customer Updated.")]
     public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "customers/{id}")] HttpRequestData req,
             Guid id)
     {
-        var response = req.CreateResponse(HttpStatusCode.OK);
+        var response = req.CreateResponse(HttpStatusCode.NoContent);
 
         response.Headers.Add("Content-Type", "application/json; charset=utf-8");
 
@@ -42,13 +42,10 @@ public class CustomersUpdate
 
         customer.CustomerId = id;
 
-        _context.Customers.Update(customer);
+        _ = _context.Customers.Update(customer);
 
-        var numberOfStateEntries = await _context.SaveChangesAsync();
-
-        await response.WriteStringAsync(JsonSerializer.Serialize(customer));
+        _ = await _context.SaveChangesAsync();
 
         return response;
-
     }
 }

@@ -25,8 +25,8 @@ public class CustomersCreate
 
     [Function(nameof(CustomersCreate))]
     [OpenApiOperation(operationId: "CustomersCreate", tags: new[] { "Customer" }, Summary = "Create a new Customer.", Description = "Operation create a new customer in database.", Visibility = OpenApiVisibilityType.Important)]
-    [OpenApiRequestBody(contentType: "application/json", bodyType: typeof(Customer), Required = true, Description = "create customer in database.")]
-    [OpenApiResponseWithBody(statusCode: HttpStatusCode.Created, contentType: "application/json", bodyType: typeof(string), Summary = "Job list.", Description = "List of all the jobs.")]
+    [OpenApiRequestBody(contentType: "application/json", bodyType: typeof(Customer), Required = true, Description = "Create customer in database.")]
+    [OpenApiResponseWithBody(statusCode: HttpStatusCode.Created, contentType: "application/json", bodyType: typeof(string), Summary = "New Customer.", Description = "New Customer.")]
     public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "customers")] HttpRequestData req)
     {
         var response = req.CreateResponse(HttpStatusCode.Created);
@@ -37,13 +37,11 @@ public class CustomersCreate
 
         var customer = JsonSerializer.Deserialize<Customer>(requestBody);
 
+        if (customer is null) return req.CreateResponse(HttpStatusCode.BadRequest);
+
         customer.CustomerId = Guid.NewGuid();
 
-        _context.Customers.Add(customer);
-
-        var returnValue = await _context.SaveChangesAsync();
-
-        if (returnValue > 0)
+        if (_httpClient is not null)
         {
             //https://ui-avatars.com/api/?name=John+Doe&format=svg
             var avitarResponse = await _httpClient.GetAsync($"https://ui-avatars.com/api/?name={customer.FullName}&format=svg");
@@ -51,11 +49,11 @@ public class CustomersCreate
             var responseBody = await avitarResponse.Content.ReadAsByteArrayAsync();
 
             customer.Avatar = $"data:image/svg+xml;base64, {Convert.ToBase64String(responseBody)}";
-
-            _context.Customers.Update(customer);
-
-            var numberOfStateEntries = await _context.SaveChangesAsync();
         }
+
+        await _context.Customers.AddAsync(customer);
+
+        await _context.SaveChangesAsync();
 
         await response.WriteStringAsync(JsonSerializer.Serialize(customer));
 

@@ -24,7 +24,7 @@ public class CustomersGetAll
 
     [Function(nameof(CustomersGetAll))]
     [OpenApiOperation(operationId: "CustomersGetAll", tags: new[] { "Customer" }, Summary = "Get a list of all Customers.", Description = "Operation get customers in database.", Visibility = OpenApiVisibilityType.Important)]
-    [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(List<Customer>), Summary = "Job list.", Description = "List of all the jobs.")]
+    [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(List<Customer>), Summary = "Customer list.", Description = "Customer list.")]
     public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "customers")] HttpRequestData req)
     {
         var response = req.CreateResponse(HttpStatusCode.OK);

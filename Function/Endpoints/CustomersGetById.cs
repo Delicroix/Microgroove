@@ -30,7 +30,7 @@ public class CustomersGetById
     [Function(nameof(CustomersGetById))]
     [OpenApiOperation(operationId: "CustomersGetById", tags: new[] { "Customer" }, Summary = "Get a Customer by Id.", Description = "Operation get a customer in database.", Visibility = OpenApiVisibilityType.Important)]
     [OpenApiParameter("id", Description = "Id for the customer to be fetched.", Type = typeof(Guid), Required = true, Visibility = OpenApiVisibilityType.Important)]
-    [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(string), Summary = "Job list.", Description = "List of all the jobs.")]
+    [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(string), Summary = "Customer.", Description = "Customer.")]
     public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "customers/{id}")] HttpRequestData req,
             Guid id)
     {
@@ -45,6 +45,5 @@ public class CustomersGetById
         await response.WriteStringAsync(JsonSerializer.Serialize(customer));
 
         return response;
-
     }
 }

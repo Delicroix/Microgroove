@@ -22,8 +22,8 @@ public class CustomersDelete
 
     [Function(nameof(CustomersDelete))]
     [OpenApiOperation(operationId: "CustomersDelete", tags: new[] { "Customer" }, Summary = "Delete a Customer by Id.", Description = "Operation delete a customer from database.", Visibility = OpenApiVisibilityType.Important)]
-    [OpenApiParameter("id", Description = "Id for the customer to be fetched.", Type = typeof(Guid), Required = true, Visibility = OpenApiVisibilityType.Important)]
-    [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(string), Summary = "Job list.", Description = "List of all the jobs.")]
+    [OpenApiParameter("id", Description = "Id for the customer to be deleted.", Type = typeof(Guid), Required = true, Visibility = OpenApiVisibilityType.Important)]
+    [OpenApiResponseWithBody(statusCode: HttpStatusCode.NoContent, contentType: "application/json", bodyType: typeof(string), Summary = "Customer removed.", Description = "Customer removed.")]
     public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "customers/{id}")] HttpRequestData req,
             Guid id)
     {
@@ -37,7 +37,7 @@ public class CustomersDelete
 
         _context.Remove(customer);
 
-        var numberOfStateEntries = await _context.SaveChangesAsync();
+        _ = await _context.SaveChangesAsync();
 
         return response;
     }

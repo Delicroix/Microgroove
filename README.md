@@ -48,6 +48,7 @@ profile image for the customer
 
 - I created the function project as a .NET 7 Isolated Function
 - This is also my first stab at implementing Domain Driven Design & Clean Architecture (as I understand it)
+- Project contains OpenApi (swagger) endpoints for testing
 - Project represents about 10 total hours of work
 
 **What's missing?**
@@ -56,3 +57,4 @@ profile image for the customer
 - Authorization
 - Object validation
 - DTO/Entity Mapping
+- Unit/Integration tests
