@@ -16,11 +16,11 @@ public class CustomersCreate
     private readonly ILogger _logger;
     private readonly HttpClient? _httpClient;
 
-    public CustomersCreate(Context context, ILoggerFactory loggerFactory)//, IHttpClientFactory httpClientFactory)
+    public CustomersCreate(Context context, ILoggerFactory loggerFactory, IHttpClientFactory httpClientFactory)
     {
         _context = context;
         _logger = loggerFactory.CreateLogger<CustomersCreate>();
-        //_httpClient = httpClientFactory.CreateClient();
+        _httpClient = httpClientFactory.CreateClient();
     }
 
     [Function(nameof(CustomersCreate))]
@@ -43,16 +43,14 @@ public class CustomersCreate
 
         var returnValue = await _context.SaveChangesAsync();
 
-        if (false)//returnValue > 0)
+        if (returnValue > 0)
         {
-            var content = new StringContent(JsonSerializer.Serialize(new { name = $"{customer.FullName}", format = "svg" }));
-
             //https://ui-avatars.com/api/?name=John+Doe&format=svg
-            var avitarResponse = await _httpClient.PostAsync("https://ui-avatars.com/api/", content);
+            var avitarResponse = await _httpClient.GetAsync($"https://ui-avatars.com/api/?name={customer.FullName}&format=svg");
 
-            string responseBody = await avitarResponse.Content.ReadAsStringAsync();
+            var responseBody = await avitarResponse.Content.ReadAsByteArrayAsync();
 
-            customer.Avatar = responseBody;
+            customer.Avatar = $"data:image/svg+xml;base64, {Convert.ToBase64String(responseBody)}";
 
             _context.Customers.Update(customer);
 

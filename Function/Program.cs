@@ -13,6 +13,8 @@ var host = new HostBuilder()
     .ConfigureOpenApi()
     .ConfigureServices(s =>
     {
+
+        s.AddHttpClient();
         s.AddDbContext<Context>(options => options.UseInMemoryDatabase("InMemDb"));
         s.AddSingleton<IOpenApiConfigurationOptions>(_ =>
         {
