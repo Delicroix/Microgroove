@@ -1,5 +1,7 @@
 # Microgroove
 
+***see my notes at the bottom***
+
 **Challenge**
 
 Build a C# Azure Functions v4 REST API, with an in-memory SQLite DB. Use .net 6.0.
@@ -47,3 +49,10 @@ profile image for the customer
 - I created the function project as a .NET 7 Isolated Function
 - This is also my first stab at implementing Domain Driven Design & Clean Architecture (as I understand it)
 - Project represents about 10 total hours of work
+
+**What's missing?**
+
+- Repository/UnitOfWork implementation
+- Authorization
+- Object validation
+- DTO/Entity Mapping
