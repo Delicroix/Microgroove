@@ -53,6 +53,7 @@ profile image for the customer
 
 **What's missing?**
 
+- Key Vault
 - Repository/UnitOfWork implementation
 - Authorization
 - Object validation
